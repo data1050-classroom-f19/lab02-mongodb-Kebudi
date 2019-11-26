@@ -25,10 +25,12 @@ def query1(minFare, maxFare):
     docs = db.taxi.find({
         'fare_amount': {
             '$elemMatch': {
-                '$gte': minFare, '$lt': maxFare
+                '$gte': 'minFare', '$lt': 'maxFare'
             }
         }
     })
+
+    # db.products.find({'fare_amount':{'$gt':minFare,'$lt':maxFare400}})
     result = [doc for doc in docs]
     return result
 
