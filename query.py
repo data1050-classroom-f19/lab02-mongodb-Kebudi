@@ -97,9 +97,10 @@ def query4():
     Returns:
         An array of documents.
     """
-    docs = db.taxi.aggregate(
-        # TODO: implement me
-    )
+    docs = db.taxi.aggregate([{'$group': {'_id': {'hour': '$h'},
+                            'avg_fare': {'$avg': '$fare_amount'}, 
+                            'avg_dist': {}}
+                        }])
     result = [doc for doc in docs]
     return result
 
