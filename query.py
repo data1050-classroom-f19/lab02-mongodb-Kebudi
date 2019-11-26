@@ -80,8 +80,8 @@ def query3():
         An array of documents.
     """
     docs = db.airbnb.aggregate([{'$group': {
-        'name': '$neighbourhood_group', 'mean': {'$avg': '$fare_amount'}}
-            {'$sort': {'total': -1}}}])
+        '_id': '$neighbourhood_group', 'total': {'$avg': '$fare_amount'}
+        }}, {'$sort': {'total': -1}}])
 
     result = [doc for doc in docs]
     return result
@@ -122,8 +122,29 @@ def query5():
 
 
     """
-    docs = db.airbnb.aggregate(
-        # TODO: implement me
-    )
+    docs = db.airbnb.aggregate([
+       {
+           '$geoNear': {
+               'near': {'type': 'Point', 'coordinates': [longitude, latitude]},
+               'distanceField': 'dist.calculated',
+               'maxDistance': 1000,
+               'spherical': False
+           }
+       },
+       {
+           '$project': {
+               '_id': 0,
+               'dist': 1,
+               'name': 1,
+               'neighbourhood': 1,
+               'neighbourhood_group': 1,
+               'price': 1,
+               'room_type': 1
+           }
+       },
+       {
+           '$sort': {'dist': 1}
+       }
+   ])
     result = [doc for doc in docs]
     return result
